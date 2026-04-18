@@ -3,7 +3,6 @@ import os
 from huggingface_hub import InferenceClient
 from PIL import Image
 
-# Set page config
 st.set_page_config(page_title="KMC AI Text to Image", layout="centered")
 
 # Logo
@@ -12,17 +11,13 @@ st.image(logo, width=250)
 
 st.title("KMC AI - Text to Image Generator")
 
-# Prompt input
 prompt = st.text_input("Enter your prompt")
 
-# Hugging Face token
+# Get token
 HF_TOKEN = os.getenv("HF_TOKEN")
 
-# Create client
-client = InferenceClient(
-    provider="fal-ai",
-    api_key=HF_TOKEN,
-)
+# Create Hugging Face client
+client = InferenceClient(api_key=HF_TOKEN)
 
 if st.button("Generate Image"):
 
@@ -34,15 +29,13 @@ if st.button("Generate Image"):
 
             image = client.text_to_image(
                 prompt,
-                model="baidu/ERNIE-Image",
+                model="black-forest-labs/FLUX.1-schnell"
             )
 
             st.image(image, caption="Generated Image", use_container_width=True)
 
-            # Save image
             image.save("generated_image.png")
 
-            # Download button
             with open("generated_image.png", "rb") as file:
                 st.download_button(
                     label="Download Image",
